@@ -1,46 +1,55 @@
 import { useState, useEffect } from "react";
-import api from "../api/axios";
-import ProductCard from "../components/ProductCard";
+import { fetchProducts, fetchBlogPosts } from "../api/products";
+import SEO from "../components/SEO";
+import HeroBanner from "../components/home/HeroBanner";
+import CategoryGrid from "../components/home/CategoryGrid";
+import FeaturedProducts from "../components/home/FeaturedProducts";
+import PromotionsBanner from "../components/home/PromotionsBanner";
+import TrustBar from "../components/home/TrustBar";
+import BlogPreview from "../components/home/BlogPreview";
+import { ProductCardSkeleton } from "../components/ui/Skeleton";
 
 export default function HomePage() {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-    api
-        .get("/products")
-        .then((res) => setProducts(res.data))
-        .catch(() =>
-        setError(
-            "No se pudieron cargar los productos. Verifica que el backend esté corriendo en localhost:8080."
-        )
-        )
-        .finally(() => setLoading(false));
-    }, []);
+  useEffect(() => {
+    Promise.all([fetchProducts(), fetchBlogPosts()])
+      .then(([prods, posts]) => {
+        setProducts(prods);
+        setBlogPosts(posts);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-    if (loading)
-    return <div className="text-center py-12 text-gray-500">Cargando...</div>;
+  return (
+    <>
+      <SEO
+        title="Cosméticos y Cuidado Personal"
+        description="Descubre skincare, maquillaje y fragancias en Beauty. Belleza accesible con envío gratis +50€."
+      />
 
-    if (error)
-    return (
-        <div className="text-center py-12">
-        <p className="text-red-500 mb-2">{error}</p>
-        </div>
-    );
+      <div className="space-y-10 py-6 lg:space-y-14 lg:py-8">
+        <HeroBanner />
+        <TrustBar />
+        <CategoryGrid />
 
-    return (
-    <div>
-        <h1 className="text-3xl font-bold mb-8">Nuestros Productos</h1>
-        {products.length === 0 ? (
-        <p className="text-gray-500">Aún no hay productos. Crea uno desde Postman.</p>
-        ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        {loading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
             ))}
-        </div>
+          </div>
+        ) : (
+          <>
+            <FeaturedProducts products={products} />
+            <PromotionsBanner products={products} />
+          </>
         )}
-    </div>
-    );
+
+        {!loading && <BlogPreview posts={blogPosts} />}
+      </div>
+    </>
+  );
 }

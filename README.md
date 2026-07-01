@@ -1,16 +1,63 @@
-# React + Vite
+# Beauty — Frontend E-commerce
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Tienda online de cosméticos y cuidado personal construida con React + Vite + Tailwind CSS.
 
-Currently, two official plugins are available:
+## Funcionalidades (PRD v1.0)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Home**: hero banner, categorías, productos destacados, promociones, blog preview, barra de confianza
+- **Catálogo (PLP)**: filtros por categoría, marca, precio, tono/tipo de piel, ordenamiento, chips activos
+- **PDP**: galería, variantes (tono/tamaño), tabs (descripción, ingredientes, uso, reviews), schema SEO
+- **Carrito**: drawer lateral + página completa, persistencia localStorage, barra envío gratis
+- **Checkout**: 4 pasos (dirección → envío → pago → confirmación)
+- **Wishlist**: favoritos con persistencia
+- **Búsqueda**: autocompletado, búsquedas recientes y populares
+- **Perfil**: historial de pedidos, puntos de fidelidad
+- **Blog**: listado + artículos con product cards shoppable
+- **i18n**: Español / English
+- **Modo oscuro**: toggle con persistencia
+- **Accesibilidad**: focus visible, ARIA labels, navegación por teclado
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + Vite 8
+- React Router 7
+- Tailwind CSS 4
+- Axios (API backend con fallback a mock data)
+- Lucide React (iconos)
+- React Helmet Async (SEO meta tags)
 
-## Expanding the Oxlint configuration
+## Desarrollo
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
+
+Abre [http://localhost:5173](http://localhost:5173)
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## API Backend
+
+Por defecto conecta a `http://localhost:8080/api`. Si el backend no está disponible, usa datos mock automáticamente.
+
+## Rutas
+
+| Ruta | Página |
+|------|--------|
+| `/` | Home |
+| `/productos` | Catálogo |
+| `/productos/:category` | Catálogo filtrado |
+| `/productos/:category/:slug` | Detalle producto |
+| `/carrito` | Carrito |
+| `/checkout` | Checkout |
+| `/wishlist` | Favoritos |
+| `/buscar?q=` | Búsqueda |
+| `/cuenta` | Perfil |
+| `/blog` | Blog |
+| `/blog/:slug` | Artículo |
